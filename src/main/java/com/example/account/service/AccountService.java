@@ -33,8 +33,7 @@ public class AccountService {
 
     @Transactional
     public AccountDto createAccount(Long userId, Long initialBalance) {
-        AccountUser accountUser = accountUserRepository.findById(userId)
-                .orElseThrow(() -> new AccountException(ErrorCode.USER_NOT_FOUND));
+        AccountUser accountUser = getAccountUser(userId);
 
         if(accountRepository.countByAccountUser(accountUser) == 10) {
             throw new AccountException(ErrorCode.MAX_ACCOUNT_PER_USER_10);
@@ -65,8 +64,7 @@ public class AccountService {
 
     @Transactional
     public AccountDto deleteAccount(Long userId, String accountNumber) {
-        AccountUser accountUser = accountUserRepository.findById(userId)
-                .orElseThrow(() -> new AccountException(ErrorCode.USER_NOT_FOUND));
+        AccountUser accountUser = getAccountUser(userId);
         Account account = accountRepository.findByAccountNumber(accountNumber)
                 .orElseThrow(() -> new AccountException(ErrorCode.ACCOUNT_NOT_FOUND));
 
@@ -94,8 +92,7 @@ public class AccountService {
 
     @Transactional
     public List<AccountDto> getAccountsByUserId(Long userId) {
-        AccountUser accountUser = accountUserRepository.findById(userId)
-                .orElseThrow(() -> new AccountException(ErrorCode.USER_NOT_FOUND));
+        AccountUser accountUser = getAccountUser(userId);
 
         List<Account> accounts = accountRepository
                 .findByAccountUser(accountUser);
@@ -103,5 +100,11 @@ public class AccountService {
         return accounts.stream()
                 .map(AccountDto::fromEntity)
                 .collect(Collectors.toList());
+    }
+
+    private AccountUser getAccountUser(Long userId) {
+        AccountUser accountUser = accountUserRepository.findById(userId)
+                .orElseThrow(() -> new AccountException(ErrorCode.USER_NOT_FOUND));
+        return accountUser;
     }
 }
