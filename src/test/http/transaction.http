@@ -1,0 +1,22 @@
+### use balance
+POST http://localhost:8080/transaction/use
+Content-Type: application/json
+
+{
+  "userId" : 1,
+  "accountNumber": "1000000000",
+  "amount": 50000
+}
+
+### cancel balance
+POST http://localhost:8080/transaction/cancel
+Content-Type: application/json
+
+{
+  "transactionId" : "e2076f638604420999e26c762e38de7c",
+  "accountNumber": "1000000000",
+  "amount": 50000
+  }
+
+### query transaction
+GET http://localhost:8080/transaction/e2076f638604420999e26c762e38de7c
